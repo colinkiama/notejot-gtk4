@@ -38,3 +38,12 @@ sudo ninja install
 
 ## Notes Storage
 Notes are stored in `~/.local/share/com.github.lainsce.notejot/`
+
+## Acknowledgments
+
+A fork of https://github.com/lainsce/notejot
+
+Current Notejot is very different, and much detached from its elementary OS roots
+Consider giving a few penny the way of the original author !
+
+
