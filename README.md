@@ -31,8 +31,7 @@ vala
 Simply clone this repo, then:
 
 ```bash
-meson build && cd build
-meson configure -Dprefix=/usr
+meson build && cd build && meson configure -Dprefix=/usr
 sudo ninja install
 ```
 

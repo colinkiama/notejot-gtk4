@@ -1,0 +1,15 @@
+../src/MainWindow.vala:23.21-23.36: error: The type name `Gtk.SourceBuffer' could not be found
+   23 |         private new Gtk.SourceBuffer buffer;
+      |                     ^~~~~~~~~~~~~~~~        
+../src/MainWindow.vala:24.17-24.30: error: The type name `Gtk.SourceView' could not be found
+   24 |         private Gtk.SourceView view;
+      |                 ^~~~~~~~~~~~~~      
+../src/MainWindow.vala:619.13-619.22: error: The type name `Gdk.Keymap' could not be found
+  619 |             Gdk.Keymap keymap = Gdk.Keymap.get_for_display (Gdk.Display.get_default ());
+      |             ^~~~~~~~~~                                                                  
+../src/MainWindow.vala:630.44-630.55: error: The type name `Gdk.EventAny' could not be found
+  630 |         public override bool delete_event (Gdk.EventAny event) {
+      |                                            ^~~~~~~~~~~~         
+../src/EditableLabel.vala:23.38-23.49: error: The type name `Gtk.EventBox' could not be found
+   23 | public class Notejot.EditableLabel : Gtk.EventBox {
+

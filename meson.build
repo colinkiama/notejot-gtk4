@@ -42,12 +42,12 @@ executable(
     'src/Services/Storage.vala',
     c_args: c_args,
     dependencies: [
-        dependency('granite'),
+        dependency('granite-7'),
         dependency('gobject-2.0'),
-        dependency('gtksourceview-3.0'),
+        dependency('gtksourceview-5'),
         dependency('json-glib-1.0'),
         dependency('gee-0.8'),
-        dependency('gtk+-4.0')
+        dependency('gtk4')
     ],
     vala_args: [
         meson.source_root() + '/vapi/config.vapi',
