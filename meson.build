@@ -47,7 +47,7 @@ executable(
         dependency('gtksourceview-3.0'),
         dependency('json-glib-1.0'),
         dependency('gee-0.8'),
-        dependency('gtk+-3.0')
+        dependency('gtk+-4.0')
     ],
     vala_args: [
         meson.source_root() + '/vapi/config.vapi',
