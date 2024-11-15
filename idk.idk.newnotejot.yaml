@@ -1,7 +1,7 @@
 id: idk.idk.newnotejot
 runtime: io.elementary.Platform
-runtime-version: '8'
-sdk: io.elementary.Sd
+runtime-version: '8.0'
+sdk: io.elementary.SdK
 command: newnotejot
 finish-args:
         --device=dri
