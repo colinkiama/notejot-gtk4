@@ -20,8 +20,8 @@
 namespace Notejot {
     public class MainWindow : Gtk.Window {
         private Gtk.Button delete_item;
-        private new Gtk.SourceBuffer buffer;
-        private Gtk.SourceView view;
+        private new GtkSource.Buffer buffer;
+        private GtkSource.View view;
         private Gtk.HeaderBar header;
         private Gtk.ActionBar actionbar;
         private int uid;
@@ -30,8 +30,12 @@ namespace Notejot {
         public string selected_color_text = "#ad5f00";
         public bool pinned = false;
         public string content = "";
-        public string title_name = "Notejot";
-        public Notejot.EditableLabel label;
+        public string title_name = "Notejot";#
+        
+        // AAAAAAAAAAAAAAAAAAAAA
+        //public Gtk.Headerbar.EditableLabel label = "";
+        public Gtk.EditableLabel label = new Gtk.EditableLabel("");
+        
 
         public SimpleActionGroup actions { get; construct; }
 
@@ -88,6 +92,7 @@ namespace Notejot {
             var applet_button_image = new Gtk.Image.from_icon_name ("view-pin-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
             applet_button.set_image (applet_button_image);
 
+            // BROKEN
             if (pinned) {
                 applet_button.set_active (true);
                 applet_button.get_style_context().add_class("rotated");
@@ -110,6 +115,8 @@ namespace Notejot {
                     applet_button.get_style_context().remove_class("rotated");
     			    unstick ();
                 }
+                set_keep_above(pinned); // TEST THIS
+                
             });
 
             label = new Notejot.EditableLabel (this.title_name);
@@ -610,11 +617,9 @@ namespace Notejot {
             return new Storage.from_storage(x, y, w, h, color, selected_color_text, pinned, content, title_name);
         }
 
-#if VALA_0_42
-        protected bool match_keycode (uint keyval, uint code) {
-#else
+
+/*
         protected bool match_keycode (int keyval, uint code) {
-#endif
             Gdk.KeymapKey [] keys;
             Gdk.Keymap keymap = Gdk.Keymap.get_for_display (Gdk.Display.get_default ());
             if (keymap.get_entries_for_keyval (keyval, out keys)) {
@@ -626,8 +631,10 @@ namespace Notejot {
 
             return false;
         }
+*/
 
-        public override bool delete_event (Gdk.EventAny event) {
+
+        public override bool delete_event (Gdk.Event event) {
             int x, y;
             this.get_position (out x, out y);
             Notejot.Application.gsettings.set_int("window-x", x);

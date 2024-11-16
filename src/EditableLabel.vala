@@ -18,9 +18,9 @@
 *
 * Co-authored by: Corentin Noël <corentin@elementary.io>
 *
-*/
 
-public class Notejot.EditableLabel : Gtk.EventBox {
+
+public class Notejot.EditableLabel : Gtk.EditableLabel {
     public signal void changed (string new_title);
     public Gtk.Label title;
     private Gtk.Entry entry;
@@ -167,3 +167,4 @@ public class Notejot.EditableLabel : Gtk.EventBox {
         });
     }
 }
+*/
