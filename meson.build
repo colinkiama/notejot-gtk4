@@ -37,8 +37,8 @@ executable(
     meson.project_name(),
     'src/Application.vala',
     'src/MainWindow.vala',
-    'src/EditableLabel.vala',
-    'src/Services/NoteManager.vala',
+    # 'src/EditableLabel.vala',
+    # 'src/Services/NoteManager.vala',
     'src/Services/Storage.vala',
     c_args: c_args,
     dependencies: [

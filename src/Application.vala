@@ -19,7 +19,7 @@
 namespace Notejot {
     public class Application : Gtk.Application {
         public Gee.ArrayList<MainWindow> open_notes = new Gee.ArrayList<MainWindow>();
-        private NoteManager note_manager = new NoteManager();
+        // private NoteManager note_manager = new NoteManager();
         private static bool create_new_window = false;
         public static GLib.Settings gsettings;
 
@@ -27,7 +27,7 @@ namespace Notejot {
             Object (flags: ApplicationFlags.HANDLES_COMMAND_LINE,
                     application_id: "com.github.lainsce.notejot");
         }
-        
+
         static construct {
             gsettings = new GLib.Settings ("com.github.lainsce.notejot");
         }
@@ -47,14 +47,14 @@ namespace Notejot {
             set_accels_for_action ("app.new", {"<Control>n"});
             add_action (new_action);
             new_action.activate.connect (() => {
-                create_note(null);
+                create_note (null);
             });
             var delete_action = new SimpleAction ("delete", null);
             set_accels_for_action ("app.delete", {"<Control>w"});
             add_action (delete_action);
             delete_action.activate.connect (() => {
                 MainWindow note = (MainWindow)get_active_window ();
-                remove_note(note);
+                // remove_note(note);
                 note.destroy();
             });
         }
@@ -70,37 +70,37 @@ namespace Notejot {
                 var list = note_manager.load_from_file();
 
                 if (list.size == 0) {
-                    create_note(null);
+                    create_note (null);
                 } else {
-                    foreach (Storage storage in list) {
-                        create_note(storage);
-                    }
+                    // foreach (Storage storage in list) {
+                    //     create_note(storage);
+                    // }
                 }
             }
 	}
 
-	public void create_note(Storage? storage) {
-            debug ("Creating a note…\n");
-	    var note = new MainWindow(this, storage);
-            open_notes.add(note);
-            update_storage();
-	}
+	// public void create_note(Storage? storage) {
+ //            debug ("Creating a note…\n");
+	//     var note = new MainWindow(this, storage);
+ //            open_notes.add(note);
+ //            update_storage();
+	// }
 
-        public void remove_note(MainWindow note) {
-            debug ("Removing a note…\n");
-            open_notes.remove (note);
-            update_storage();
-	}
+ //        public void remove_note(MainWindow note) {
+ //            debug ("Removing a note…\n");
+ //            open_notes.remove (note);
+ //            update_storage();
+	// }
 
-	public void update_storage() {
-            debug ("Updating the storage…\n");
-	    Gee.ArrayList<Storage> storage = new Gee.ArrayList<Storage>();
+	// public void update_storage() {
+ //            debug ("Updating the storage…\n");
+	//     Gee.ArrayList<Storage> storage = new Gee.ArrayList<Storage>();
 
-	    foreach (MainWindow w in open_notes) {
-                storage.add(w.get_storage_note());
-		note_manager.save_notes(storage);
-            }
-	}
+	//     foreach (MainWindow w in open_notes) {
+ //                storage.add(w.get_storage_note());
+	// 	note_manager.save_notes(storage);
+ //            }
+	// }
 
         protected override int command_line (ApplicationCommandLine command_line) {
             var context = new OptionContext ("File");

@@ -30,12 +30,12 @@ namespace Notejot {
         public string selected_color_text = "#ad5f00";
         public bool pinned = false;
         public string content = "";
-        public string title_name = "Notejot";#
-        
+        public string title_name = "Notejot";
+
         // AAAAAAAAAAAAAAAAAAAAA
         //public Gtk.Headerbar.EditableLabel label = "";
         public Gtk.EditableLabel label = new Gtk.EditableLabel("");
-        
+
 
         public SimpleActionGroup actions { get; construct; }
 
@@ -68,35 +68,35 @@ namespace Notejot {
                 this.selected_color_text = "#ad5f00";
                 this.pinned = false;
                 this.content = "";
-                this.set_position(Gtk.WindowPosition.CENTER);
+                // TODO: Replace with X11-specific APIs
+                // this.set_position(Gtk.WindowPosition.CENTER);
                 this.title_name = "Notejot";
                 set_title (this.title_name);
             }
 
-            this.get_style_context().add_class("rounded");
-            this.get_style_context().add_class("default-decoration");
-            this.get_style_context().add_class("notejot-window");
+            this.add_css_class ("rounded");
+            this.add_css_class ("default-decoration");
+            this.add_css_class ("notejot-window");
             this.uid = uid_counter++;
 
             update_theme();
 
             header = new Gtk.HeaderBar();
-            header.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-            header.get_style_context().add_class("notejot-title");
-            header.has_subtitle = false;
-            header.set_show_close_button (true);
+            header.add_css_class ("flat");
+            header.add_css_class ("toolbar");
+            header.add_css_class("notejot-title");
             header.decoration_layout = "close:";
 
             var applet_button = new Gtk.ToggleButton ();
-            applet_button.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-            var applet_button_image = new Gtk.Image.from_icon_name ("view-pin-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
-            applet_button.set_image (applet_button_image);
+            applet_button.add_css_class ("flat");
+            applet_button.icon_name = "view-pin-symbolic";
 
             // BROKEN
             if (pinned) {
                 applet_button.set_active (true);
-                applet_button.get_style_context().add_class("rotated");
-                set_keep_below (pinned);
+                applet_button.add_css_class ("rotated");
+                // TODO: Replace with X11-specific API
+                // set_keep_below (pinned);
                 stick ();
             } else {
                 applet_button.set_active (false);
@@ -106,17 +106,20 @@ namespace Notejot {
             applet_button.toggled.connect (() => {
                 if (applet_button.active) {
                     pinned = true;
-                    applet_button.get_style_context().add_class("rotated");
-                    set_keep_below (pinned);
-                    stick ();
+                    applet_button.add_css_class ("rotated");
+                    // TODO: Replace with X11-specific API
+                    // set_keep_below (pinned);
+                    // stick ();
     			} else {
     			    pinned = false;
-                    set_keep_below (pinned);
+                    // TODO: Replace with X11-specific API
+                    // set_keep_below (pinned);
                     applet_button.get_style_context().remove_class("rotated");
-    			    unstick ();
+    			    // TODO: Replace with X11-specific API
+    			    // unstick ();
                 }
                 set_keep_above(pinned); // TEST THIS
-                
+
             });
 
             label = new Notejot.EditableLabel (this.title_name);
@@ -125,7 +128,7 @@ namespace Notejot {
             this.set_titlebar(header);
 
             actionbar = new Gtk.ActionBar ();
-            actionbar.get_style_context().add_class("notejot-bar");
+            actionbar.add_css_class ("notejot-bar");
             create_actionbar ();
             create_app_menu ();
 
@@ -137,7 +140,7 @@ namespace Notejot {
             view = new Gtk.SourceView.with_buffer (buffer);
             view.bottom_margin = 10;
             view.buffer.text = this.content;
-            view.get_style_context().add_class("notejot-view");
+            view.add_css_class ("notejot-view");
             view.expand = true;
             view.left_margin = 10;
             view.margin = 2;
@@ -195,8 +198,8 @@ namespace Notejot {
 
         private void update_theme() {
             var css_provider = new Gtk.CssProvider();
-            this.get_style_context().add_class("mainwindow-%d".printf(uid));
-            this.get_style_context().add_class("window-%d".printf(uid));
+            this.add_css_class ("mainwindow-%d".printf(uid));
+            this.add_css_class ("window-%d".printf(uid));
 
             string style = null;
             string selected_color = this.color;
@@ -214,7 +217,7 @@ namespace Notejot {
                             alpha(%s, 0) 50%
                         );
                 }
-                
+
                 .mainwindow-%d undershoot.bottom {
                     background:
                         linear-gradient(
@@ -346,13 +349,13 @@ namespace Notejot {
                 """)).printf(uid, selected_color, uid, selected_color, selected_color, uid, selected_color, selected_color, selected_color, selected_color_text, uid, uid, selected_color_text, uid, selected_color_text, selected_color, selected_color, uid, selected_color_text, uid, uid, uid, selected_color, selected_color, selected_color_text, uid);
 
             try {
-                css_provider.load_from_data(style, -1);
+                css_provider.load_from_string (style);
             } catch (GLib.Error e) {
                 warning ("Failed to parse css style : %s", e.message);
             }
 
-            Gtk.StyleContext.add_provider_for_screen (
-                Gdk.Screen.get_default (),
+            Gtk.StyleContext.add_provider_for_display (
+                Gdk.Display.get_default (),
                 css_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
@@ -575,20 +578,22 @@ namespace Notejot {
             this.selected_color_text = storage.selected_color_text;
             this.pinned = storage.pinned;
             this.content = storage.content;
-            this.move((int)storage.x, (int)storage.y);
+            // TODO: Reimplement using X11-specific APIs
+            // this.move((int)storage.x, (int)storage.y);
             if ((int)storage.w != 0 && (int)storage.h != 0) {
-                this.resize ((int)storage.w, (int)storage.h);
+                // TODO: Reimplement using X11-specific APIs
+                // this.resize ((int)storage.w, (int)storage.h);
             }
             this.title_name = storage.title;
             set_title (this.title_name);
         }
 
         private void action_new () {
-            ((Application)this.application).create_note(null);
+            // ((Application)this.application).create_note(null);
         }
 
         private void action_delete () {
-            ((Application)this.application).remove_note(this);
+            // ((Application)this.application).remove_note(this);
             this.close ();
         }
 
