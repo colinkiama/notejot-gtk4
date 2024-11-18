@@ -97,7 +97,8 @@ namespace Notejot {
                 applet_button.add_css_class ("rotated");
                 // TODO: Replace with X11-specific API
                 // set_keep_below (pinned);
-                stick ();
+                // TODO: Replace with X11-specific API
+                // stick ();
             } else {
                 applet_button.set_active (false);
                 applet_button.get_style_context().remove_class("rotated");
@@ -118,17 +119,19 @@ namespace Notejot {
     			    // TODO: Replace with X11-specific API
     			    // unstick ();
                 }
-                set_keep_above(pinned); // TEST THIS
+			    // TODO: Replace with X11-specific API
+                // set_keep_above(pinned); // TEST THIS
 
             });
 
-            label = new Notejot.EditableLabel (this.title_name);
-            header.set_custom_title(label);
+            label = new Gtk.EditableLabel (this.title_name);
+            header.title_widget = label;
             header.pack_end (applet_button);
             this.set_titlebar(header);
 
             actionbar = new Gtk.ActionBar ();
             actionbar.add_css_class ("notejot-bar");
+            actionbar.add_css_class ("toolbar");
             create_actionbar ();
             create_app_menu ();
 
@@ -364,12 +367,12 @@ namespace Notejot {
         private void create_actionbar () {
             var new_item = new Gtk.Button ();
             new_item.tooltip_text = (_("New note"));
-            new_item.set_image (new Gtk.Image.from_icon_name ("list-add-symbolic", Gtk.IconSize.SMALL_TOOLBAR));
+            new_item.icon_name = "list-add-symbolic";
             new_item.action_name = MainWindow.ACTION_PREFIX + MainWindow.ACTION_NEW;
 
             delete_item = new Gtk.Button ();
             delete_item.tooltip_text = (_("Delete note"));
-            delete_item.set_image (new Gtk.Image.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.SMALL_TOOLBAR));
+            delete_item.icon_name = "edit-delete-symbolic";
             delete_item.action_name = MainWindow.ACTION_PREFIX + MainWindow.ACTION_DELETE;
 
             actionbar.pack_start (new_item);
@@ -378,7 +381,6 @@ namespace Notejot {
 
         private void create_app_menu () {
             var color_button_white = new Gtk.Button ();
-            color_button_white.has_focus = false;
             color_button_white.halign = Gtk.Align.CENTER;
             color_button_white.height_request = 24;
             color_button_white.width_request = 24;
