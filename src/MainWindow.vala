@@ -135,53 +135,61 @@ namespace Notejot {
             create_actionbar ();
             create_app_menu ();
 
-            var scrolled = new Gtk.ScrolledWindow (null, null);
+            var scrolled = new Gtk.ScrolledWindow ();
             scrolled.set_size_request (330,270);
 
-            buffer = new Gtk.SourceBuffer (null);
+            buffer = new GtkSource.Buffer (null);
             buffer.set_highlight_matching_brackets (false);
-            view = new Gtk.SourceView.with_buffer (buffer);
+            view = new GtkSource.View.with_buffer (buffer);
             view.bottom_margin = 10;
             view.buffer.text = this.content;
             view.add_css_class ("notejot-view");
-            view.expand = true;
+            view.hexpand = true;
+            view.vexpand = true;
             view.left_margin = 10;
-            view.margin = 2;
+            view.margin_top = 2;
+            view.margin_bottom = 2;
+            view.margin_start = 2;
+            view.margin_end = 2;
             view.right_margin = 10;
             view.set_wrap_mode (Gtk.WrapMode.WORD_CHAR);
             view.top_margin = 10;
-            scrolled.add (view);
-            this.show_all();
+            scrolled.child = view;
 
-            var grid = new Gtk.Grid ();
-            grid.orientation = Gtk.Orientation.VERTICAL;
-            grid.expand = true;
-            grid.add (scrolled);
-            grid.add (actionbar);
-            grid.show_all ();
-            this.add (grid);
+            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            box.hexpand = true;
+            box.vexpand = true;
+            box.append (scrolled);
+            box.append (actionbar);
 
-            focus_out_event.connect (() => {
-                update_storage ();
-                return false;
+            this.child = box;
+            this.present ();
+
+            var focus_event_controller = new Gtk.EventControllerFocus ();
+            box.add_controller (focus_event_controller);
+
+            var key_event_controller = new Gtk.EventControllerKey ();
+            box.add_controller (key_event_controller);
+
+            focus_event_controller.leave.connect (() => {
+                // update_storage ();
             });
 
             label.changed.connect (() => {
-                update_storage ();
+                // update_storage ();
             });
 
             view.buffer.changed.connect (() => {
-                update_storage ();
+                // update_storage ();
             });
 
-            key_press_event.connect ((e) => {
-                uint keycode = e.hardware_keycode;
-                if ((e.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+            key_event_controller.key_pressed.connect ((keyval, keycode, state) => {
+                if ((state & Gdk.ModifierType.CONTROL_MASK) != 0) {
                     if (match_keycode (Gdk.Key.z, keycode)) {
                         action_undo ();
                     }
                 }
-                if ((e.state & Gdk.ModifierType.CONTROL_MASK + Gdk.ModifierType.SHIFT_MASK) != 0) {
+                if ((state & Gdk.ModifierType.CONTROL_MASK + Gdk.ModifierType.SHIFT_MASK) != 0) {
                     if (match_keycode (Gdk.Key.z, keycode)) {
                         action_redo ();
                     }
@@ -196,7 +204,7 @@ namespace Notejot {
 
         private void update_storage () {
             get_storage_note();
-            ((Application)this.application).update_storage();
+            // ((Application)this.application).update_storage();
         }
 
         private void update_theme() {
@@ -385,46 +393,46 @@ namespace Notejot {
             color_button_white.height_request = 24;
             color_button_white.width_request = 24;
             color_button_white.tooltip_text = _("White");
+            color_button_white.vexpand = true;
 
             var color_button_white_context = color_button_white.get_style_context ();
             color_button_white_context.add_class ("color-button");
             color_button_white_context.add_class ("color-white");
 
             var color_button_red = new Gtk.Button ();
-            color_button_red.has_focus = false;
             color_button_red.halign = Gtk.Align.CENTER;
             color_button_red.height_request = 24;
             color_button_red.width_request = 24;
             color_button_red.tooltip_text = _("Red");
+            color_button_red.vexpand = true;
 
             var color_button_red_context = color_button_red.get_style_context ();
             color_button_red_context.add_class ("color-button");
             color_button_red_context.add_class ("color-red");
 
             var color_button_orange = new Gtk.Button ();
-            color_button_orange.has_focus = false;
             color_button_orange.halign = Gtk.Align.CENTER;
             color_button_orange.height_request = 24;
             color_button_orange.width_request = 24;
             color_button_orange.tooltip_text = _("Orange");
+            color_button_orange.vexpand = true;
 
             var color_button_orange_context = color_button_orange.get_style_context ();
             color_button_orange_context.add_class ("color-button");
             color_button_orange_context.add_class ("color-orange");
 
             var color_button_yellow = new Gtk.Button ();
-            color_button_yellow.has_focus = false;
             color_button_yellow.halign = Gtk.Align.CENTER;
             color_button_yellow.height_request = 24;
             color_button_yellow.width_request = 24;
             color_button_yellow.tooltip_text = _("Yellow");
+            color_button_yellow.vexpand = true;
 
             var color_button_yellow_context = color_button_yellow.get_style_context ();
             color_button_yellow_context.add_class ("color-button");
             color_button_yellow_context.add_class ("color-yellow");
 
             var color_button_green = new Gtk.Button ();
-            color_button_green.has_focus = false;
             color_button_green.halign = Gtk.Align.CENTER;
             color_button_green.height_request = 24;
             color_button_green.width_request = 24;
@@ -435,141 +443,143 @@ namespace Notejot {
             color_button_green_context.add_class ("color-green");
 
             var color_button_blue = new Gtk.Button ();
-            color_button_blue.has_focus = false;
             color_button_blue.halign = Gtk.Align.CENTER;
             color_button_blue.height_request = 24;
             color_button_blue.width_request = 24;
             color_button_blue.tooltip_text = _("Blue");
+            color_button_blue.vexpand = true;
 
             var color_button_blue_context = color_button_blue.get_style_context ();
             color_button_blue_context.add_class ("color-button");
             color_button_blue_context.add_class ("color-blue");
 
             var color_button_indigo = new Gtk.Button ();
-            color_button_indigo.has_focus = false;
             color_button_indigo.halign = Gtk.Align.CENTER;
             color_button_indigo.height_request = 24;
             color_button_indigo.width_request = 24;
             color_button_indigo.tooltip_text = _("Indigo");
+            color_button_indigo.vexpand = true;
 
             var color_button_indigo_context = color_button_indigo.get_style_context ();
             color_button_indigo_context.add_class ("color-button");
             color_button_indigo_context.add_class ("color-indigo");
 
             var color_button_cocoa = new Gtk.Button ();
-            color_button_cocoa.has_focus = false;
             color_button_cocoa.halign = Gtk.Align.CENTER;
             color_button_cocoa.height_request = 24;
             color_button_cocoa.width_request = 24;
             color_button_cocoa.tooltip_text = _("Cocoa");
+            color_button_cocoa.vexpand = true;
 
             var color_button_cocoa_context = color_button_cocoa.get_style_context ();
             color_button_cocoa_context.add_class ("color-button");
             color_button_cocoa_context.add_class ("color-cocoa");
 
             var color_button_slate = new Gtk.Button ();
-            color_button_slate.has_focus = false;
             color_button_slate.halign = Gtk.Align.CENTER;
             color_button_slate.height_request = 24;
             color_button_slate.width_request = 24;
             color_button_slate.tooltip_text = _("Slate");
+            color_button_slate.vexpand = true;
 
             var color_button_slate_context = color_button_slate.get_style_context ();
             color_button_slate_context.add_class ("color-button");
             color_button_slate_context.add_class ("color-slate");
 
             var color_button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-            color_button_box.pack_start (color_button_white, false, true, 0);
-            color_button_box.pack_start (color_button_red, false, true, 0);
-            color_button_box.pack_start (color_button_orange, false, true, 0);
-            color_button_box.pack_start (color_button_yellow, false, true, 0);
-            color_button_box.pack_start (color_button_green, false, true, 0);
-            color_button_box.pack_start (color_button_blue, false, true, 0);
-            color_button_box.pack_start (color_button_indigo, false, true, 0);
-            color_button_box.pack_start (color_button_cocoa, false, true, 0);
-            color_button_box.pack_start (color_button_slate, false, true, 0);
+            color_button_box.prepend (color_button_white);
+            color_button_box.prepend (color_button_red);
+            color_button_box.prepend (color_button_orange);
+            color_button_box.prepend (color_button_yellow);
+            color_button_box.prepend (color_button_green);
+            color_button_box.prepend (color_button_blue);
+            color_button_box.prepend (color_button_indigo);
+            color_button_box.prepend (color_button_cocoa);
+            color_button_box.prepend (color_button_slate);
 
             var color_button_label = new Granite.HeaderLabel (_("Note Color"));
 
             var setting_grid = new Gtk.Grid ();
-            setting_grid.margin = 12;
+            setting_grid.margin_top = 12;
+            setting_grid.margin_bottom = 12;
+            setting_grid.margin_start = 12;
+            setting_grid.margin_end = 12;
             setting_grid.column_spacing = 6;
             setting_grid.row_spacing = 6;
             setting_grid.orientation = Gtk.Orientation.VERTICAL;
             setting_grid.attach (color_button_label, 0, 0, 1, 1);
             setting_grid.attach (color_button_box, 0, 1, 1, 1);
-            setting_grid.show_all ();
 
-            var popover = new Gtk.Popover (null);
-            popover.add (setting_grid);
+            var popover = new Gtk.Popover ();
+            popover.child = setting_grid;
 
             var app_button = new Gtk.MenuButton();
             app_button.has_tooltip = true;
             app_button.tooltip_text = (_("Settings"));
-            app_button.image = new Gtk.Image.from_icon_name ("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+            app_button.icon_name = "open-menu-symbolic";
             app_button.popover = popover;
 
             color_button_white.clicked.connect (() => {
                 this.color = "#F5F5F5";
                 this.selected_color_text = "#666666";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_red.clicked.connect (() => {
                 this.color = "#ff8c82";
                 this.selected_color_text = "#7a0000";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_orange.clicked.connect (() => {
                 this.color = "#ffc27d";
                 this.selected_color_text = "#a62100";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_yellow.clicked.connect (() => {
                 this.color = "#fff394";
                 this.selected_color_text = "#ad5f00";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_green.clicked.connect (() => {
                 this.color = "#d1ff82";
                 this.selected_color_text = "#206b00";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_blue.clicked.connect (() => {
                 this.color = "#8cd5ff";
                 this.selected_color_text = "#002e99";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_indigo.clicked.connect (() => {
                 this.color = "#aca9fd";
                 this.selected_color_text = "#452981";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_cocoa.clicked.connect (() => {
                 this.color = "#a3907c";
                 this.selected_color_text = "#3d211b";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             color_button_slate.clicked.connect (() => {
                 this.color = "#a5b3bc";
                 this.selected_color_text = "#0e141f";
                 update_theme();
-                ((Application)this.application).update_storage();
+                // ((Application)this.application).update_storage();
             });
 
             actionbar.pack_end (app_button);
@@ -625,11 +635,25 @@ namespace Notejot {
         }
 
 
-/*
-        protected bool match_keycode (int keyval, uint code) {
+
+        // protected bool match_keycode (int keyval, uint code) {
+        //     Gdk.KeymapKey [] keys;
+        //     Gdk.Keymap keymap = Gdk.Keymap.get_for_display (Gdk.Display.get_default ());
+        //     if (keymap.get_entries_for_keyval (keyval, out keys)) {
+        //         foreach (var key in keys) {
+        //             if (code == key.keycode)
+        //                 return true;
+        //             }
+        //         }
+
+        //     return false;
+        // }
+
+        protected bool match_keycode (uint keyval, uint code) {
             Gdk.KeymapKey [] keys;
-            Gdk.Keymap keymap = Gdk.Keymap.get_for_display (Gdk.Display.get_default ());
-            if (keymap.get_entries_for_keyval (keyval, out keys)) {
+            var display = Gdk.Display.get_default ();
+
+            if (display.map_keyval (keyval, out keys)) {
                 foreach (var key in keys) {
                     if (code == key.keycode)
                         return true;
@@ -638,7 +662,7 @@ namespace Notejot {
 
             return false;
         }
-*/
+
 
 
         public override bool delete_event (Gdk.Event event) {
